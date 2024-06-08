@@ -77,7 +77,7 @@ public class DBInitializer {
             Employee savedEmployee = userRepository.save(employee);
             employees.add(savedEmployee);
 
-            for (int j = 0; j < 200; j++) {
+            for (int j = 0; j < 2; j++) {
                 Attendance attendance = Attendance.builder()
                         .attendanceDay(generateRandomDateTime(2022, 2024))
                         .attendanceStatus(EAttend.PRESENT)

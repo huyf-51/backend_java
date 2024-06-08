@@ -42,18 +42,21 @@ admin:
 ---
 
 spring:
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
   config:
     activate:
       on-profile: prod
   datasource:
-    driver-class-name: org.postgresql.Driver
-    username: student_vzmt_user
-    url: jdbc:postgresql://dpg-cmmdabi1hbls73cf9qkg-a.singapore-postgres.render.com/student_vzmt
-    password: BzELocsCqi4J0FNQPa86Z6DTpK59Z50r
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: java_user
+    url: jdbc:mysql://javadb.mysql.database.azure.com:3306/employee?useSSL=true
+    password: Nam123456
   jpa:
     hibernate:
       ddl-auto: create-drop
     show-sql: 'true'
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
+admin:
+  pass: $2a$10$lWYy9R0tP3/xBg0S2Eh40eN5ryfpp269Qh.TBtreobCrVSQxJtWiC
