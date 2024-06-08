@@ -1,5 +1,7 @@
 package com.nam.controller;
 
+import com.microsoft.applicationinsights.TelemetryClient;
+import com.microsoft.applicationinsights.telemetry.EventTelemetry;
 import com.nam.exception.UserException;
 import com.nam.payload.request.LoginRequest;
 import com.nam.payload.request.SignupEmployeeRequest;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,7 +35,8 @@ public class AuthController {
     private final JwtProvider jwtProvider;
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
-    // private final RefreshTokenService refreshTokenService;
+    private static final TelemetryClient telemetryClient = new TelemetryClient();
+
 
     @PostMapping("/signup/employee")
     @PreAuthorize("hasRole('ADMIN')")
@@ -55,26 +59,15 @@ public class AuthController {
                 .map(item -> item.getAuthority())
                 .collect(Collectors.toList());
 
-        //RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
+        //Application Insights:
+        EventTelemetry event = new EventTelemetry("Employee sign in");
+        event.getProperties().put("Employee ID: ", userDetails.getId().toString());
+        event.getProperties().put("Time: ", LocalDateTime.now().toString());
+        telemetryClient.trackEvent(event);
 
         return ResponseEntity.ok(new JwtResponse(jwt, "", userDetails.getId(),
                 userDetails.getUsername(), userDetails.getEmail(), roles));
     }
-
-//    @PostMapping("/refreshtoken")
-//    public ResponseEntity<?> refreshtoken(@Valid @RequestBody TokenRefreshRequest request) {
-//        String requestRefreshToken = request.getRefreshToken();
-//
-//        return refreshTokenService.findByToken(requestRefreshToken)
-//                .map(refreshTokenService::verifyExpiration)
-//                .map(RefreshToken::getUser)
-//                .map(user -> {
-//                    String token = jwtProvider.generateTokenByEmail(user.getEmail());
-//                    return ResponseEntity.ok(new TokenRefreshResponse(token, requestRefreshToken));
-//                })
-//                .orElseThrow(() -> new TokenRefreshException(requestRefreshToken,
-//                        "Refresh token is not in database!"));
-//    }
 
     @PostMapping("/signout")
     public ResponseEntity<?> logoutUser() {

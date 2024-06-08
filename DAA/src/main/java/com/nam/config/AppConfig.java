@@ -39,7 +39,6 @@ public class AppConfig {
 
     private final AuthEntryPointJwt unauthorizedHandler;
 
-    IpAddressMatcher hasIpAddress = new IpAddressMatcher("14.161.6.190");
 
     public AppConfig(UserDetailsServiceImpl userDetailsServiceImpl, AuthEntryPointJwt unauthorizedHandler) {
         this.userDetailsServiceImpl = userDetailsServiceImpl;
@@ -54,7 +53,7 @@ public class AppConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration cfg = new CorsConfiguration();
-        cfg.setAllowedOrigins(Arrays.asList("http://localhost:3000", "https://studywithnam.vercel.app"));
+        cfg.setAllowedOrigins(Arrays.asList("http://localhost:3000", "https://quanly-nhansu.vercel.app"));
         cfg.setAllowedMethods(Collections.singletonList("*"));
         cfg.setAllowCredentials(true);
         cfg.setAllowedHeaders(Collections.singletonList("*"));
@@ -83,15 +82,7 @@ public class AppConfig {
     @Bean
     @Order(1)
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        String REPORT_TO = "{\"group\":\"csp-violation-report\",\"max_age\":2592000,\"endpoints\":[{\"url\":\"https://localhost:5454/report\"}]}";
-        http
-                .headers(httpSecurityHeadersConfigurer ->
-                        httpSecurityHeadersConfigurer
-                                .addHeaderWriter(new StaticHeadersWriter("Report-To", REPORT_TO))
-                                .xssProtection(Customizer.withDefaults())
-                                .contentSecurityPolicy(contentSecurityPolicyConfig ->
-                                        contentSecurityPolicyConfig.policyDirectives("form-action 'self'; report-uri /report; report-to csp-violation-report")))
-                .cors(Customizer.withDefaults())
+                http.cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

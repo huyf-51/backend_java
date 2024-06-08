@@ -1,5 +1,6 @@
 package com.nam;
 
+import com.microsoft.applicationinsights.attach.ApplicationInsights;
 import com.nam.service.FilesStorageService;
 import jakarta.annotation.Resource;
 import org.springframework.boot.CommandLineRunner;
@@ -11,6 +12,7 @@ public class DAA implements CommandLineRunner {
     @Resource
     FilesStorageService storageService;
     public static void main(String[] args) {
+        ApplicationInsights.attach();
         SpringApplication.run(DAA.class, args);
     }
 
