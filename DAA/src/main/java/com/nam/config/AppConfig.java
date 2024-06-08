@@ -101,6 +101,10 @@ public class AppConfig {
                         .requestMatchers("/notice/all").permitAll()
                         .requestMatchers("/api/**").permitAll()
                         .requestMatchers("/auth/logout").permitAll()
+                        .requestMatchers("/upload").permitAll()
+                        .requestMatchers("/files").permitAll()
+                        .requestMatchers("/files/*").permitAll()
+
                         //.requestMatchers("/employee/getAll").access(new WebExpressionAuthorizationManager("hasIpAddress('0.0.0.0/0')"))
                         //.requestMatchers("/auth/signin").access((authentication, context) -> new AuthorizationDecision(hasIpAddress.matches(context.getRequest())))
                         //.requestMatchers("/auth/signin").access(new WebExpressionAuthorizationManager("hasIpAddress('0.0.0.0/0')"))
